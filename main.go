@@ -9,7 +9,7 @@ import (
 	"os"
 	"io"
 	"io/ioutil"
-//	"fmt"
+	"net/smtp"
 )
 
 func main() {
@@ -32,6 +32,25 @@ func main() {
 		log.Printf("%#v", record)
 		content := []byte(record[0] + "\n" + record[1] + "\n")
 		ioutil.WriteFile("out.txt", content, os.ModePerm)
+	}
+
+	auth := smtp.PlainAuth(
+		"",
+		"", // 送信元メアド
+		"", // パスワード
+		"smtp.gmail.com",
+	)
+
+	err2 := smtp.SendMail(
+		"smtp.gmail.com:587",
+		auth,
+		"", // 送信元メアド
+		[]string{""},　// 送信先メアド
+		[]byte("メール本文"), // 本文
+	)
+
+	if err2 != nil {
+		log.Fatal(err2)
 	}	
 }
 
